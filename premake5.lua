@@ -1,7 +1,8 @@
 project "yaml-cpp"
 	kind "StaticLib"
 	language "C++"
-  toolset "v142"
+	toolset "v142"
+	location ""
 
 	files
 	{
