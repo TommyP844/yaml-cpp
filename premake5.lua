@@ -3,6 +3,9 @@ project "yaml-cpp"
 	language "C++"
 	location ""
 
+	staticruntime "on"
+	runtime "Debug"
+
 	files
 	{
 		"src/**.h",
