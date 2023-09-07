@@ -3,8 +3,7 @@ project "yaml-cpp"
 	language "C++"
 	location ""
 
-	staticruntime "on"
-	runtime "Debug"
+	staticruntime "off"
 
 	files
 	{
@@ -14,10 +13,19 @@ project "yaml-cpp"
 		"include/**.h"
 	}
 
-	defines "YAML_CPP_STATIC_DEFINE"
+	defines 
+	{
+		"YAML_CPP_STATIC_DEFINE"
+	}
 
 	includedirs
 	{
 		"include"
 	}
+
+		filter { "configurations:Debug" }
+		runtime "Debug"
+		
+	filter { "configurations:Release" }
+		runtime "Release"
 

@@ -1,3 +1,7 @@
 build/
 /tags
 /bazel-*
+/bin
+/obj
+yaml-cpp.vcxproj
+yaml-cpp.vcxproj.filters
