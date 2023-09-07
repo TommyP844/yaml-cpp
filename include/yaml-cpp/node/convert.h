@@ -17,6 +17,11 @@
 #include <type_traits>
 #include <valarray>
 #include <vector>
+#include <version>
+
+#ifdef __cpp_lib_string_view
+#include <string_view>
+#endif
 
 #include "yaml-cpp/binary.h"
 #include "yaml-cpp/node/impl.h"
@@ -88,6 +93,20 @@ template <std::size_t N>
 struct convert<char[N]> {
   static Node encode(const char* rhs) { return Node(rhs); }
 };
+
+#ifdef __cpp_lib_string_view
+template <>
+struct convert<std::string_view> {
+  static Node encode(std::string_view rhs) { return Node(std::string(rhs)); }
+
+  static bool decode(const Node& node, std::string_view& rhs) {
+    if (!node.IsScalar())
+      return false;
+    rhs = node.Scalar();
+    return true;
+  }
+};
+#endif
 
 template <>
 struct convert<_Null> {

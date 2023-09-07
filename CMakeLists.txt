@@ -1,5 +1,6 @@
-# 3.5 is actually available almost everywhere, but this a good minimum
-cmake_minimum_required(VERSION 3.4)
+# 3.5 is actually available almost everywhere, but this a good minimum.
+# 3.14 as the upper policy limit avoids CMake deprecation warnings.
+cmake_minimum_required(VERSION 3.4...3.14)
 
 # enable MSVC_RUNTIME_LIBRARY target property
 # see https://cmake.org/cmake/help/latest/policy/CMP0091.html
@@ -7,7 +8,7 @@ if(POLICY CMP0091)
   cmake_policy(SET CMP0091 NEW)
 endif()
 
-project(YAML_CPP VERSION 0.7.0 LANGUAGES CXX)
+project(YAML_CPP VERSION 0.8.0 LANGUAGES CXX)
 
 set(YAML_CPP_MAIN_PROJECT OFF)
 if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
@@ -18,27 +19,23 @@ include(CMakePackageConfigHelpers)
 include(CMakeDependentOption)
 include(CheckCXXCompilerFlag)
 include(GNUInstallDirs)
+include(CTest)
 
 option(YAML_CPP_BUILD_CONTRIB "Enable yaml-cpp contrib in library" ON)
 option(YAML_CPP_BUILD_TOOLS "Enable parse tools" ON)
 option(YAML_BUILD_SHARED_LIBS "Build yaml-cpp shared library" ${BUILD_SHARED_LIBS})
 option(YAML_CPP_INSTALL "Enable generation of yaml-cpp install targets" ${YAML_CPP_MAIN_PROJECT})
 option(YAML_CPP_FORMAT_SOURCE "Format source" ON)
-
-if (YAML_CPP_BUILD_TESTS)
-    include(CTest)
-endif()
-
-if (YAML_CPP_FORMAT_SOURCE)
-    find_program(YAML_CPP_CLANG_FORMAT_EXE NAMES clang-format)
-endif()
-
 cmake_dependent_option(YAML_CPP_BUILD_TESTS
-  "Enable yaml-cpp tests" ON
-  "BUILD_TESTING;CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR" OFF)
+  "Enable yaml-cpp tests" OFF
+  "BUILD_TESTING;YAML_CPP_MAIN_PROJECT" OFF)
 cmake_dependent_option(YAML_MSVC_SHARED_RT
   "MSVC: Build yaml-cpp with shared runtime libs (/MD)" ON
   "CMAKE_SYSTEM_NAME MATCHES Windows" OFF)
+ 
+if (YAML_CPP_FORMAT_SOURCE)
+    find_program(YAML_CPP_CLANG_FORMAT_EXE NAMES clang-format)
+endif()
 
 if (YAML_BUILD_SHARED_LIBS)
   set(yaml-cpp-type SHARED)
@@ -172,6 +169,7 @@ if (YAML_CPP_INSTALL)
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
                 FILES_MATCHING PATTERN "*.h")
   install(EXPORT yaml-cpp-targets
+    NAMESPACE yaml-cpp::
     DESTINATION "${CONFIG_EXPORT_DIR}")
   install(FILES
       "${PROJECT_BINARY_DIR}/yaml-cpp-config.cmake"

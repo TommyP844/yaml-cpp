@@ -33,7 +33,7 @@ target_include_directories(yaml-cpp-tests
 target_compile_options(yaml-cpp-tests
   PRIVATE
     $<$<CXX_COMPILER_ID:Clang>:-Wno-c99-extensions -Wno-variadic-macros -Wno-sign-compare>
-    $<$<CXX_COMPILER_ID:GNU>:-Wno-variadic-macros -Wno-sign-compare>)
+    $<$<CXX_COMPILER_ID:GNU>:-Wno-variadic-macros -Wno-sign-compare -Wno-narrowing>)
 target_link_libraries(yaml-cpp-tests
   PRIVATE
     Threads::Threads
@@ -46,7 +46,7 @@ if (NOT DEFINED CMAKE_CXX_STANDARD)
 endif()
 
 
-add_test(yaml-cpp::test yaml-cpp-tests)
+add_test(NAME yaml-cpp::test COMMAND yaml-cpp-tests)
 
 if (build-windows-dll)
   add_custom_command(
