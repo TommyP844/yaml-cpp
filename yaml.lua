@@ -2,8 +2,7 @@ project "yaml-cpp"
 	kind "StaticLib"
 	language "C++"
 	location ""
-
-	staticruntime "off"
+	architecture "x64"
 
 	files
 	{
@@ -23,9 +22,9 @@ project "yaml-cpp"
 		"include"
 	}
 
-		filter { "configurations:Debug" }
-		runtime "Debug"
+	filter { "configurations:Debug" }
+		buildoptions {"/MDd"}
 		
 	filter { "configurations:Release" }
-		runtime "Release"
+		buildoptions {"/MD"}
 
