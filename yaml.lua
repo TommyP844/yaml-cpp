@@ -22,9 +22,3 @@ project "yaml-cpp"
 		"include"
 	}
 
-	filter { "configurations:Debug" }
-		buildoptions {"/MDd"}
-		
-	filter { "configurations:Release" }
-		buildoptions {"/MD"}
-
